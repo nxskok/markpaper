@@ -1,0 +1,24 @@
+---
+title: "How to write an academic paper using R Markdown"
+author: "Ken Butler"
+date: "August 30, 2016"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+One of the principal assets of science is *reproducibility*: when you write a paper, or read one, you or anyone else should be able to reproduce what was done from the description given. In particular, if you have the same data as the original authors, you should be able to run the same analysis as they did, and get identical results. A different form of reproducibility is that of the *conclusions*: if the science stands up, you should be able to collect your own data, run the same analysis on your data, and get similar conclusions to the original authors (or be able to explain why not).
+
+A similar issue involves making things reproducible *for yourself*: can you re-run your original analysis using updated data, or tweak things to consider some other factor, all the while leaving everything else the same?
+
+The traditional way of writing a paper consists of grabbing the output you need from R Studio, and copying-and-pasting it into a Word document. But this is not reproducible: if anything changes, you have to find your code, re-run it (hoping you have the right code), and copy-paste again (hoping that you remembered to copy the right thing). The whole process is fraught with potential problems, and is itself *unscientific*. We can do much better.
+
+# R Markdown
+
+R Markdown is a "markup language": when you write your paper, you include not only the text, but also instructions for formatting that text, and then you process the R Markdown to obtain your formatted text. To make changes to how the formatted text appears, you go back and change the R Markdown and then process it again.
+
+# References
