@@ -43,6 +43,8 @@ See the cheatsheet at @RMarkCS, which includes these ideas and more.
 
 # Code and Code Chunks
 
+## Introduction
+
 Perhaps the best feature of R Markdown is that you can include code in your document, and *the code will be run and the results inserted in your document*. This means the end of copying and pasting results to your paper. By way of example, let's create a small data frame and run a regression. To insert a code chunk, look for the green C icon with an arrow, to the left of Run at the top of your Markdown document. Click it (or type Control-Shift-I). This will insert an empty code chunk at the cursor. In the code chunk, place any R code you like, such as:
 
 ```{r}
@@ -54,8 +56,71 @@ d
 
 In the output, as you see, the value of the data frame `d` is shown.
 
+Including graphs in output is no different than including text results, as we see:
 
 
+```{r}
+library(ggplot2)
+ggplot(d,aes(x=x,y=y))+geom_point()
+```
+
+or we can do a regression:
+
+```{r}
+y.1=lm(y~x,data=d)
+summary(y.1)
+```
+
+## Including only some values from the output in text
+
+We may not need all that output; we may need only a couple of values from it. First, we figure out the values we need:
+
+```{r}
+v=coef(y.1)
+v
+```
+
+and then we include them in text using "backticks" (the symbol on the key below Esc on your keyboard) with \verb=r= and then an expression inside:
+
+The intercept of the regression line is `r v[1]` and the slope is `r v[2]`.
+
+This is better than copying the numbers into the text (for the same reason that calculating everything is better than copying and pasting: no possibility of error), because what if the intercept and slope change (perhaps because the data change) and we forget to change the text?
+
+I might have wanted the P-value of the slope, rounded to 4 decimal places. First, I have to find out where it will be in \texttt{y.1}: it was actually in the `summary`:
+
+```{r}
+names(summary(y.1))
+summary(y.1)$coefficients
+```
+
+That's the table that was in the output, and has the P-values in it. The one we want is in the second row and 4th column, so we need to do something like this:
+
+The slope is significantly different from zero, with a P-value of `r round(summary(y.1)$coefficients[2,4],4)`.
+
+That is a bit unwieldy, so you can create a code chunk to calculate what you want to display first:
+
+```{r}
+slope.pval=round(summary(y.1)$coefficients[2,4],4)
+```
+(we see in a moment how to hide this), and then say that the P-value is `r slope.pval`.
+
+## Displaying, or not, the code and the output
+
+The default is to display both the code and the output, with the output displayed in "typewriter" font. This may not be what you need. In a paper, there is probably no need to display the code, and some of the output might need to be calculated but not shown. Or you might want to display some code and talk about it, but not actually run it.
+
+To not display the code, the magic word is `echo`. You put \verb-echo=F- *inside the curly brackets at the top of the code chunk, after the `r`*: `{r, echo=F}`. To see the effect, compare these two code chunks (and go back to the source code to see how they were produced):
+
+```{r}
+d
+```
+
+with
+
+```{r,echo=F}
+d
+```
+
+In the second chunk, the code `d` (to say what to print) does not appear.
 
 # Citations and references
 
