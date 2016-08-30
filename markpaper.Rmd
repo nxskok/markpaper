@@ -3,6 +3,7 @@ title: "How to write an academic paper using R Markdown"
 author: "Ken Butler"
 date: "August 30, 2016"
 output: pdf_document
+bibliography: myrefs.bib
 ---
 
 ```{r setup, include=FALSE}
@@ -17,8 +18,44 @@ A similar issue involves making things reproducible *for yourself*: can you re-r
 
 The traditional way of writing a paper consists of grabbing the output you need from R Studio, and copying-and-pasting it into a Word document. But this is not reproducible: if anything changes, you have to find your code, re-run it (hoping you have the right code), and copy-paste again (hoping that you remembered to copy the right thing). The whole process is fraught with potential problems, and is itself *unscientific*. We can do much better.
 
+In this Github repository, you will see all my files, including the output and the source. Have them open side by side, so you can see how to make a certain effect happen.
+
 # R Markdown
 
-R Markdown is a "markup language": when you write your paper, you include not only the text, but also instructions for formatting that text, and then you process the R Markdown to obtain your formatted text. To make changes to how the formatted text appears, you go back and change the R Markdown and then process it again.
+R Markdown is a "markup language": when you write your paper, you include not only the text, but also instructions for formatting that text, and then you process the R Markdown to obtain your formatted text. To make changes to how the formatted text appears, you go back and change the R Markdown and then process it again. This is unlike working in Word, where you see as you type what it will look like. 
+
+In R Studio, select File, New File and R Markdown. You can start a new project, or go to the one that has your data in it.
+This opens a template file that shows you some of the things you can do. (You can delete this file when you are done looking at it.) The top four or so lines, in between \texttt{---}, are called a YAML header. In your new document, this will show simple "meta-information" about the document like the author, title and date. We will see later that this is also where information about references goes. 
+
+You can choose an output format (which you can change later). HTML is good while you're writing, since is the quickest to re-run if you make changes. If you want PDF output, you will need to have \LaTeX\ installed. Word output is probably best when you are basically happy with what you have and you're almost done.
+
+The first thing you will want is to start a new section (called something like "Introduction"). Put the section heading on a line by itself (I like to leave blank lines before and after), and start the line with a \verb+#+. To add a subsection, start the line with two of them, \verb+##+. Should you wish to have a subsection of a subsection, start with three. 
+
+You may want to have some text in italics. To do that, surround the text with asterisks, *like this*. For bold, use two asterisks  before and after, **in this fashion**.
+
+Other things you might want to do are to link to another document, which you do by putting the link text in square brackets and following it immediately (no spaces) with the URL in brackets. You can include an image by the same sort of mechanism; for example the file `image.png` is included like this: \verb+![](image.png)+. To include a mathematical formula, set it up as a \LaTeX\ formula, and include as \verb=$x^2+y^2$=. 
+
+See the cheatsheet at @RMarkCS, which includes these ideas and more.
+
+# Producing the output document
+
+
+
+# Code and Code Chunks
+
+Perhaps the best feature of R Markdown is that you can include code in your document, and *the code will be run and the results inserted in your document*. This means the end of copying and pasting results to your paper. By way of example, let's create a small data frame and run a regression. To insert a code chunk, look for the green C icon with an arrow, to the left of Run at the top of your Markdown document. Click it (or type Control-Shift-I). This will insert an empty code chunk at the cursor. In the code chunk, place any R code you like, such as:
+
+```{r}
+x=1:6
+y=c(10,11,14,15,15,17)
+d=data.frame(x,y)
+d
+```
+
+
+
+
+
+# Citations and references
 
 # References
