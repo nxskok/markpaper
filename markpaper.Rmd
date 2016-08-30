@@ -52,6 +52,7 @@ d=data.frame(x,y)
 d
 ```
 
+In the output, as you see, the value of the data frame `d` is shown.
 
 
 
