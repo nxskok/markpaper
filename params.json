@@ -1,0 +1,6 @@
+{
+  "name": "Markpaper",
+  "tagline": "how to write an academic paper using R Markdown",
+  "body": "# markpaper\r\nhow to write an academic paper using R Markdown\r\n\r\nwith advice on including R output (code), references, figures, tables etc.\r\n\r\nR markdown file in markpaper.Rmd\r\n\r\npdf output in markpaper.pdf\r\n\r\nConsult both side by side to see what to do and how it works.",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
