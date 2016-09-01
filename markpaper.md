@@ -6,9 +6,7 @@ output: pdf_document
 bibliography: myrefs.bib
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+
 
 # Introduction
 
@@ -59,39 +57,66 @@ To change the output format, click the down-arrow to the right of Knit. This wil
 
 ## Introduction
 
-Perhaps the best feature of R Markdown is that you can include code in
-	your document, and *the code will be run and the results
-	inserted in your document*. This means the end of copying and
-	pasting results to your paper. By way of example, let's create
-	a small data frame and run a regression. To insert a code
-	chunk, look for the green C icon with an arrow, to the left of
-	Run at the top of your Markdown document. Click it (or type
-	Control-Shift-I). This will insert an empty code chunk at the
-	cursor. In the code chunk, place any R code you like, such as: 
+Perhaps the best feature of R Markdown is that you can include code in your document, and *the code will be run and the results inserted in your document*. This means the end of copying and pasting results to your paper. By way of example, let's create a small data frame and run a regression. To insert a code chunk, look for the green C icon with an arrow, to the left of Run at the top of your Markdown document. Click it (or type Control-Shift-I). This will insert an empty code chunk at the cursor. In the code chunk, place any R code you like, such as:
 
-```{r}
+
+```r
 x=1:6
 y=c(10,11,14,15,15,17)
 d=data.frame(x,y)
 d
 ```
 
+```
+##   x  y
+## 1 1 10
+## 2 2 11
+## 3 3 14
+## 4 4 15
+## 5 5 15
+## 6 6 17
+```
+
 In the output, as you see, the value of the data frame `d` is shown.
 
-Including graphs in output is no different than including text
-	  results, as we see: 
+Including graphs in output is no different than including text results, as we see:
 
 
-```{r}
+
+```r
 library(ggplot2)
 ggplot(d,aes(x=x,y=y))+geom_point()
 ```
 
+![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2-1.png)
+
 or we can do a regression:
 
-```{r}
+
+```r
 y.1=lm(y~x,data=d)
 summary(y.1)
+```
+
+```
+## 
+## Call:
+## lm(formula = y ~ x, data = d)
+## 
+## Residuals:
+##        1        2        3        4        5        6 
+## -0.23810 -0.60952  1.01905  0.64762 -0.72381 -0.09524 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)   8.8667     0.7240  12.247 0.000255 ***
+## x             1.3714     0.1859   7.377 0.001799 ** 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.7777 on 4 degrees of freedom
+## Multiple R-squared:  0.9315,	Adjusted R-squared:  0.9144 
+## F-statistic: 54.43 on 1 and 4 DF,  p-value: 0.001799
 ```
 
 ## Including only some values from the output in text
@@ -100,34 +125,57 @@ A reference for these ideas is @xie16.
 
 We may not need all that output; we may need only a couple of values from it. First, we figure out the values we need:
 
-```{r}
+
+```r
 v=coef(y.1)
 v
 ```
 
+```
+## (Intercept)           x 
+##    8.866667    1.371429
+```
+
 and then we include them in text using "backticks" (the symbol on the key below Esc on your keyboard) with \verb=r= and then an expression inside:
 
-The intercept of the regression line is `r v[1]` and the slope is `r v[2]`.
+The intercept of the regression line is 8.8666667 and the slope is 1.3714286.
 
 This is better than copying the numbers into the text (for the same reason that calculating everything is better than copying and pasting: no possibility of error), because what if the intercept and slope change (perhaps because the data change) and we forget to change the text?
 
 I might have wanted the P-value of the slope, rounded to 4 decimal places. First, I have to find out where it will be in \texttt{y.1}: it was actually in the `summary`:
 
-```{r}
+
+```r
 names(summary(y.1))
+```
+
+```
+##  [1] "call"          "terms"         "residuals"     "coefficients" 
+##  [5] "aliased"       "sigma"         "df"            "r.squared"    
+##  [9] "adj.r.squared" "fstatistic"    "cov.unscaled"
+```
+
+```r
 summary(y.1)$coefficients
+```
+
+```
+##             Estimate Std. Error   t value     Pr(>|t|)
+## (Intercept) 8.866667  0.7239661 12.247350 0.0002552248
+## x           1.371429  0.1858973  7.377343 0.0017994572
 ```
 
 That's the table that was in the output, and has the P-values in it. The one we want is in the second row and 4th column, so we need to do something like this:
 
-The slope is significantly different from zero, with a P-value of `r round(summary(y.1)$coefficients[2,4],4)`.
+The slope is significantly different from zero, with a P-value of 0.0018.
 
 That is a bit unwieldy, so you can create a code chunk to calculate what you want to display first:
 
-```{r}
+
+```r
 slope.pval=round(summary(y.1)$coefficients[2,4],4)
 ```
-(we see in a moment how to hide this), and then say that the P-value is `r slope.pval`.
+(we see in a moment how to hide this), and then say that the P-value is 0.0018.
 
 ## Displaying, or not, the code and the output
 
@@ -135,195 +183,89 @@ The default is to display both the code and the output, with the output displaye
 
 To not display the code, the magic word is `echo`. You put \verb-echo=F- *inside the curly brackets at the top of the code chunk, after the `r`*: `{r, echo=F}`. To see the effect, compare these two code chunks (and go back to the source code to see how they were produced):
 
-```{r}
+
+```r
 d
+```
+
+```
+##   x  y
+## 1 1 10
+## 2 2 11
+## 3 3 14
+## 4 4 15
+## 5 5 15
+## 6 6 17
 ```
 
 with
 
-```{r,echo=F}
-d
+
+```
+##   x  y
+## 1 1 10
+## 2 2 11
+## 3 3 14
+## 4 4 15
+## 5 5 15
+## 6 6 17
 ```
 
 In the second chunk, the code `d` (to say what to print) does not appear.
 
 To say not to evaluate a code chunk, the key word is `eval`. You might, for example, want to display some code without running it. I do not have a variable called `xx`:
 
-```{r,error=T}
+
+```r
 xx
+```
+
+```
+## Error in eval(expr, envir, enclos): object 'xx' not found
 ```
 
 I might appear to be creating one here (but look at the R Markdown file):
 
-```{r,eval=F}
+
+```r
 xx=1:5
 ```
 
 Does it exist?
 
-```{r,error=TRUE}
+
+```r
 xx
+```
+
+```
+## Error in eval(expr, envir, enclos): object 'xx' not found
 ```
 
 It doesn't, because the previous chunk had `eval=F` on it. If you looked at the R Markdown, you will see also that the chunks where I tried to display `xx` had an extra option `error=T` on them; this is to display the errors. Otherwise, when you try to Knit the file, it will stop at these errors. This is normally what you want: if there is an error, you want to fix it, not display it!
 
 To control the output, use the option `results`. There are several possibilities here, but the most useful one for you is `'hide'`, which, as it suggests, does not display the output (though it does evaluate the code). Check the R Markdown to see what happened here:
 
-```{r,results='hide',echo=F}
-y.2=lm(y~x+I(x^2),data=d)
-summary(y.2)
-```
 
-```{r}
+
+
+```r
 coef(y.2)
 ```
 
-The first chunk (in the R Markdown) displays neither the output nor
-    the code (thus it does not appear at all in the output). The
-    second chunk displays the intercept and slopes (for $x$ and
-    $x^2$), but if you look only at the output it appears to have come
-    from nowhere! 
+```
+## (Intercept)           x      I(x^2) 
+##    7.700000    2.246429   -0.125000
+```
 
-When you're writing  a paper, you might want to start by displaying
-     everything, so that you can follow the logic, and only when
-     you're convinced it's correct do you start hiding any of it, so
-     that the final paper contains only the relevant results and not
-     any of the code. 
+The first chunk (in the R Markdown) displays neither the output nor the code (thus it does not appear at all in the output). The second chunk displays the intercept and slopes (for $x$ and $x^2$), but if you look only at the output it appears to have come from nowhere!
+
+When you're writing  a paper, you might want to start by displaying everything, so that you can follow the logic, and only when you're convinced it's correct do you start hiding any of it, so that the final paper contains only the relevant results and not any of the code.
 
 Another thing you might want to do with output is to make it look nicer.
-You have a couple of choices here. The simplest is `kable` from the
-    `knitr` package. Feed this a data frame, such as the one `d` that
-    we made earlier:
 
-```{r}
-library(knitr)
-kable(d)
-```
-
-or the table of regression slopes and P-values:
-
-```{r}
-kable(summary(y.1)$coefficients)
-```
-
-`kable` will also take an option "digits" that gives a number of
-	decimal places to use for each entry in the data frame:
-
-```{r}
-kable(summary(y.1)$coefficients,digits=4)
-```
-
-
-`kable` is simple by design. The next step up in complexity is
-	`pander`, which is intelligent enough to print the output of a
-	regression, or a data frame, or whatever you feed it:
-
-```{r}
-library(pander)
-pander(y.1)
-pander(y.2)
-pander(d)
-```
-
-`pander` has a large number of options for customizing the output. But
-	 it tries to do something intelligent in any case. 	 
-
-If you wish to venture beyond this, you can investigate `xtable` as
-   well. But these two should take care of most of your needs. I got
-   most of this from @broman16. See also @humburg14.
-
-In a paper, you probably want to number and refer to figures and
-   tables. This doesn't seem to happen naturally in R Markdown; there
-   is a mechanism called `bookdown` [@xie16b] that incorporates these ideas.   
 
 
 # Citations and references
 
-
-  One of the fundamental things in academic work is referencing the
-  work of others who came before you, as the answer to the question
-  "How do I know?". There are actually two parts to referencing: there
-  is the **citation** in the text, which is a piece of text of the
-  form "Butler (2016)", and there is a **reference**, which is in the
-  list of references at the end, which enables the reader to translate
-  a citation into something that can actually be found (online or in a
-  library), such as "Butler, K. (2016) Something really quite
-  interesting, *Journal of Interesting Things* 24 (9) 360--361".
-
-  The way to arrange this in R Markdown is to start with the
-  reference. This needs to live in a file with extension `.bib` (in
-  "BibTeX format", which is one standard way of collecting
-  bibliographic information). My entry for my own (fake) article looks
-  like this:
-
-```
-@article{butler16,
-date={2016},
-title={Something really quite interesting},
-journal={Journal of Interesting Things},
-volume={24},
-number={9},
-pages={360--361}
-}
-```
-
-One way of citing websites is like this (when you know the name of the
-    person writing the web page). You might know the date when the web
-    page was written; if not, leave out the `date`:
-
-```
-@misc{humburg14,
-date={2014},
-title={Using knitr and pandoc to create reproducible reports},
-author={Peter Humburg},
-howpublished={\url{http://galahad.well.ox.ac.uk/repro/}},
-note={Accessed: 2016-09-01}
-}
-```
-
-The first line says what kind of thing it is you are citing: an
-    `article` in a journal or a miscellaneous thing like a website or
-    a `book`. Then an open curly bracket and then a "key", with a
-    comma after it. The key is what you use to cite the item. After
-    that come some lines that identify the whatever-it-is: the URL of
-    a web page, the name of the author, the date a web page or article
-    was published, the journal name, the volume (typically year) and
-    number (which issue in a year) and page numbers. Each of these
-    lines begins with what-it-is, an equals, the value inside curly
-    brackets, and a comma to end the line. The last line has no comma,
-    and after that a curly bracket by itself to balance the one at the
-    beginning.
-
-A BibTeX file has a list of these entries one after the other, as
-    many as you like (in no particular order). See @bibtex for how to
-    specify different kinds of citeable items.
-
-Then go back to the YAML front matter of your R Markdown document,
-    and add a line like
-
-```
-bibliography: myrefs.bib
-```
-
-where `myrefs.bib` is the name of your BibTeX file.
-
-Now that you have the reference for each item that you wish to
-      make a citation for, you can cite them in your R Markdown
-      document. This is done by an at-sign followed by the key of the
-      item you wish to cite (as it appears in the `.bib` file), as:
-      see @butler16, or it is believed that some things are really
-      quite interesting [@butler16]. See @markcite for more details.
-
-Finally, add an empty section to the end of your document called
-      References or Bibliography or similar. This will be completed
-      with references for the list of items you have cited. This seems
-      to be hard-coded to go at the end, which isn't helpful if your
-      journal requires your figures and tables to go at the end, or
-      if you want to add an Appendix (which, in many journals, goes
-      after the References).
-
-      
-
 # References
-
-
