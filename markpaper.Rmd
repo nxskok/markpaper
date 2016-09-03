@@ -2,8 +2,9 @@
 title: "How to write an academic paper using R Markdown"
 author: "Ken Butler"
 date: "August 30, 2016"
-output: pdf_document
+output: html_document
 bibliography: myrefs.bib
+#csl: american-meteorological-society.csl
 ---
 
 ```{r setup, include=FALSE}
@@ -234,7 +235,7 @@ If you wish to venture beyond this, you can investigate `xtable` as
 
 In a paper, you probably want to number and refer to figures and
    tables. This doesn't seem to happen naturally in R Markdown; there
-   is a mechanism called `bookdown` [@xie16b] that incorporates these ideas.   
+   is a mechanism called `bookdown` [@xie16b] that incorporates these ideas. I talk about this later. In `bookdown`, you will probably want to use `kable` for your tables, since the mechanism for numbering and referencing those tables is built in.
 
 
 # Citations and references
@@ -296,7 +297,7 @@ The first line says what kind of thing it is you are citing: an
 
 A BibTeX file has a list of these entries one after the other, as
     many as you like (in no particular order). See @bibtex for how to
-    specify different kinds of citeable items.
+    specify different kinds of citeable items, and keep reading to find out how to obtain this information without having to type it. 
 
 Then go back to the YAML front matter of your R Markdown document,
     and add a line like
@@ -312,7 +313,7 @@ Now that you have the reference for each item that you wish to
       document. This is done by an at-sign followed by the key of the
       item you wish to cite (as it appears in the `.bib` file), as:
       see @butler16, or it is believed that some things are really
-      quite interesting [@butler16]. See @markcite for more details.
+      quite interesting [@butler16]. You ought to be looking at my R Markdown file and the output side by side to see how this happened. See @markcite for more details.
 
 Finally, add an empty section to the end of your document called
       References or Bibliography or similar. This will be completed
@@ -320,9 +321,79 @@ Finally, add an empty section to the end of your document called
       to be hard-coded to go at the end, which isn't helpful if your
       journal requires your figures and tables to go at the end, or
       if you want to add an Appendix (which, in many journals, goes
-      after the References).
-
+      after the References). I would worry about this only after you have the final paper written (the one that will go to the journal), when it's OK to do a little copying and pasting.
+      There can be other items in your `.bib` file, but if they're not cited, they won't go into the references. (Unless you want them to, which you can make happen.)
       
+Where does that BibTeX information come from? You can type it yourself, which is tedious. Or you can use Google Scholar. Go to `scholar.google.ca` and type an author or title into the search box. I entered `gough jien`, hoping to turn up something I knew, and I got this:
+
+![](papers.png)
+
+Strangely enough, I do know a fair few of those papers! I'm not sure how the paper with Steven Huryn ended up there, but it somehow did.
+
+To obtain the BibTeX reference, click on Cite for the paper you want, eg. the first one:
+
+![](cite.png)
+
+This pops up a box with the reference in various different formats. Except that you don't want any of those. Click the BibTeX at the bottom, and you'll get this:
+
+```
+@article{jien2015influence,
+  title={The influence of El Ni{\~n}o--Southern Oscillation on tropical cyclone activity in the eastern North Pacific basin},
+  author={Jien, Jerry Y and Gough, William A and Butler, Ken},
+  journal={Journal of Climate},
+  volume={28},
+  number={6},
+  pages={2459--2474},
+  year={2015}
+}
+```
+
+which is exactly what needs to go in your `.bib` file. Copy and paste it. Well, almost exactly. That "key", `jien2015influence`, you might consider to be a bit long. You can change it to whatever you like: my preference is something like `jien15`. Then you have to remember to refer to the paper as `@jien15` or whatever throughout *your* paper.  See @jien15 to learn all about tropical cyclone activity in the eastern north Pacific. (This paper has a special character in its title, the n-tilde that comes from Spanish, but that makes its way into the BibTeX file properly.)
+
+An easier way of citing websites and online content is via Greycite. Go to `http://greycite.knowledgeblog.org/`. Copy a URL into the box at the top, such as `http://www.scoresway.com/?sport=soccer&page=home`. You may or may not need to click the Search button. Then click one of the BibTeX buttons. It doesn't seem to matter which one. The BibTeX reference comes out (all on one line), which you can copy and paste into your `.bib` file. The reference is more or less the same as the ones I hand-made before. Again, the key may not be something you like; if so, change it in your `.bib` file. Now I can say: for up-to-date soccer scores, see @scoresway16 and it will appear in the list of references. In my `.bib` file, I had to tidy up the reference so that it looked nice (and I changed the key), thus:
+
+```
+@MISC{scoresway16, 
+url = {http://www.scoresway.com/?sport=soccer&page=home}, 
+title = {Soccer - Scoresway - Results, fixtures, tables and statistics}, 
+YEAR = {2016}, 
+howpublished = {\url{http://www.scoresway.com/?sport=soccer&page=home}}, 
+archived = {http://greycite.knowledgeblog.org/?uri=http%3A%2F%2Fwww.scoresway.com%2F%3Fsport%3Dsoccer%26page%3Dhome}, 
+}
+```
+
+If you know the author, you can add an "author" field (if Greycite didn't); likewise, if the page came from a corporation, you can use the name of the corporation as the "author". For example, I was looking for the help for PROC REG in SAS (another giant piece of statistical software), and Greycite didn't give me an author, but it seemed that the SAS Institute deserved to be one, so I added it (having checked that this is what they call themselves). And now I can refer to PROC REG in SAS [@procreg16].
+
+I just noticed that my Greycited references for websites (under the default citation style; see below) have the URL coming out twice, possibly because the URL appears in the `url` field, and also in the `howpublished` field. I ought to delete one of these each time in my `.bib` file. A little experimentation (with a different style file, see below) shows that a website should definitely have a `url` field, as Greycite produces, and does not need a `howpublished` field if it has a `url`.
+
+Each journal has their own preferred format for references. R Markdown's default format is Chicago style, author-date. (Compare to what came out of Google Scholar as "Chicago" style). You can change this, but you need to get hold of a `.csl` file. See @markcite (the paragraph Citation Styles). The Zotero Style Repository [@zotero] has a vast list of journals arranged by field. If you hover over a journal, you'll see a list of things referred to in that journal's style. Click a journal to download the `.csl` file for that journal, and move the `.csl` file to the folder where your paper is (or save it there in the first place). Then, go to the YAML block at the top of your paper, where you have something like `bibliography: myrefs.bib`, and add a line below it like
+
+```
+csl: american-meteorological-society.csl
+```
+
+or whatever the `.csl` file is called for your journal. Re-`knit` your document and note that the References section now looks appropriate for the journal. Note that we didn't have to change the `.bib` file at all: that is citation-style-agnostic. What the `.csl` file does is to say how to pull things out of the `.bib` file and format them in the appropriate way (so you don't have to). Thus, a `.bib` file is a good place to keep all your references, or you have have a separate `.bib` file for each paper, so that your thesis will use several `.bib` files. There is a way of using several `.bib` files in an R Markdown document.
+
+
+# Numbering and cross-referencing figures and tables
+
+R Markdown does not number (or allow you to cross-reference) figures and tables. This is not a problem, because a parallel package `bookdown` *does* allow you to do this, and we will see how. 
+
+The package `bookdown` [@xie16b] is a development of R Markdown that is intended for books: that is, multi-chapter documents (such as theses). Some of the things in it, such as cross-referencing figures and tables, can be "borrowed" for use in single-item documents such as journal articles. So first, you need to install `bookdown`, once, the usual way via `install.packages`. 
+
+Up at the top of your document, in the YAML block, there will be a line like
+
+```
+output: html_document
+```
+
+Change it to
+
+```
+output: bookdown::html_document2
+```
+
+The notation with the two colons means "the `html_document2` that lives in `bookdown`, and avoids your having to say `library(bookdown)` anywhere. This is the   `bookdown`   version of HTML output that allows cross-references.
 
 # References
 
