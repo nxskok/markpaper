@@ -38,11 +38,11 @@ This opens a template file that shows you some of the things you can do. (You ca
 
 You can choose an output format (which you can change later). HTML is good while you're writing, since is the quickest to re-run if you make changes. If you want PDF output, you will need to have \LaTeX\ installed. Word output is probably best when you are basically happy with what you have and you're almost done.
 
-The first thing you will want is to start a new section (called something like "Introduction"). Put the section heading on a line by itself (I like to leave blank lines before and after), and start the line with a \verb+#+. To add a subsection, start the line with two of them, \verb+##+. Should you wish to have a subsection of a subsection, start with three. 
+The first thing you will want is to start a new section (called something like "Introduction"). Put the section heading on a line by itself (I like to leave blank lines before and after), and start the line with a `#`. To add a subsection, start the line with two of them, `##`. Should you wish to have a subsection of a subsection, start with three. 
 
 You may want to have some text in italics. To do that, surround the text with asterisks, *like this*. For bold, use two asterisks  before and after, **in this fashion**.
 
-Other things you might want to do are to link to another document, which you do by putting the link text in square brackets and following it immediately (no spaces) with the URL in brackets. You can include an image by the same sort of mechanism; for example the file `image.png` is included like this: \verb+![](image.png)+. To include a mathematical formula, set it up as a \LaTeX\ formula, and include as \verb=$x^2+y^2$=, which looks like $x^2+y^2$.
+Other things you might want to do are to link to another document, which you do by putting the link text in square brackets and following it immediately (no spaces) with the URL in brackets. You can include an image by the same sort of mechanism; for example the file `image.png` is included like this: `![](image.png)`. To include a mathematical formula, set it up as a LaTeX formula, and include as `$x^2+y^2$`, which comes out looking like $x^2+y^2$.
 
 See the cheatsheet at @RMarkCS, which includes these ideas and more.
 
@@ -52,7 +52,7 @@ At the top of the R Studio window in which you are composing your document, you 
 
 Remember, though, that the output document is the *final* stage of the chain. Make any actual changes in the `.Rmd` R Markdown document, and to see their effect, Knit the document again. 
 
-To change the output format, click the down-arrow to the right of Knit. This will display your choices. For me, this is HTML, PDF or Word. If you change it, you'll see that the Output: line in the YAML block at the top of your document has changed along with it.
+To change the output format, click the down-arrow to the right of Knit. This will display your choices. For me, this is HTML, PDF or Word. If you change it, you'll see that the Output: line in the YAML block at the top of your document has changed along with it. The  best output format when you are writing your paper is HTML, since this is the quickest to (re-)process when you make changes to the R Markdown. You can produce a Word document, but do it *only at the end*, since that is the slowest to process (it has to open Word to show you what it has produced, and you have to close the Word document before you can process the R Markdown again). 
 
 
 
@@ -128,7 +128,7 @@ That is a bit unwieldy, so you can create a code chunk to calculate what you wan
 ```{r}
 slope.pval=round(summary(y.1)$coefficients[2,4],4)
 ```
-(we see in a moment how to hide this), and then say that the P-value is `r slope.pval`.
+(we see in a moment how to hide this), and then say that the P-value is `r slope.pval`. (You will definitely want to be looking at the R Markdown and the output at the same time here, or else you stand to get *very* confused.)
 
 ## Displaying, or not, the code and the output
 
@@ -166,7 +166,7 @@ Does it exist?
 xx
 ```
 
-It doesn't, because the previous chunk had `eval=F` on it. If you looked at the R Markdown, you will see also that the chunks where I tried to display `xx` had an extra option `error=T` on them; this is to display the errors. Otherwise, when you try to Knit the file, it will stop at these errors. This is normally what you want: if there is an error, you want to fix it, not display it!
+It doesn't, because the previous chunk had `eval=F` on it. If you looked at the R Markdown, you will see also that the chunks where I tried to display `xx` had an extra option `error=T` on them; this is to display the errors and keep on processing. Otherwise, when you try to Knit the file, it will stop at these errors. This is normally what you want: if there is an error, you want to fix it, not display it!
 
 To control the output, use the option `results`. There are several possibilities here, but the most useful one for you is `'hide'`, which, as it suggests, does not display the output (though it does evaluate the code). Check the R Markdown to see what happened here:
 
@@ -215,7 +215,8 @@ kable(summary(y.1)$coefficients,digits=4)
 ```
 
 
-`kable` is simple by design. The next step up in complexity is
+`kable` is simple by design. In HTML (but not the other output formats) its tables seem to fill the width of the page
+The next step up in complexity is
 	`pander`, which is intelligent enough to print the output of a
 	regression, or a data frame, or whatever you feed it:
 
@@ -366,13 +367,13 @@ If you know the author, you can add an "author" field (if Greycite didn't); like
 
 I just noticed that my Greycited references for websites (under the default citation style; see below) have the URL coming out twice, possibly because the URL appears in the `url` field, and also in the `howpublished` field. I ought to delete one of these each time in my `.bib` file. A little experimentation (with a different style file, see below) shows that a website should definitely have a `url` field, as Greycite produces, and does not need a `howpublished` field if it has a `url`.
 
-Each journal has their own preferred format for references. R Markdown's default format is Chicago style, author-date. (Compare to what came out of Google Scholar as "Chicago" style). You can change this, but you need to get hold of a `.csl` file. See @markcite (the paragraph Citation Styles). The Zotero Style Repository [@zotero] has a vast list of journals arranged by field. If you hover over a journal, you'll see a list of things referred to in that journal's style. Click a journal to download the `.csl` file for that journal, and move the `.csl` file to the folder where your paper is (or save it there in the first place). Then, go to the YAML block at the top of your paper, where you have something like `bibliography: myrefs.bib`, and add a line below it like
+Each journal has their own preferred format for references. R Markdown's default format claims to be Chicago style, though it looks more like Harvard to me. (Compare to what came out of Google Scholar.). You can change this, but you need to get hold of a `.csl` file. See @markcite (the paragraph Citation Styles). The Zotero Style Repository [@zotero] has a vast list of journals arranged by field. If you hover over a journal, you'll see a list of things referred to in that journal's style. Click a journal to download the `.csl` file for that journal, and move the `.csl` file to the folder where your paper is (or save it there in the first place). Then, go to the YAML block at the top of your paper, where you have something like `bibliography: myrefs.bib`, and add a line below it like
 
 ```
 csl: american-meteorological-society.csl
 ```
 
-or whatever the `.csl` file is called for your journal. Re-`knit` your document and note that the References section now looks appropriate for the journal. Note that we didn't have to change the `.bib` file at all: that is citation-style-agnostic. What the `.csl` file does is to say how to pull things out of the `.bib` file and format them in the appropriate way (so you don't have to). Thus, a `.bib` file is a good place to keep all your references, or you have have a separate `.bib` file for each paper, so that your thesis will use several `.bib` files. There is a way of using several `.bib` files in an R Markdown document.
+or whatever the `.csl` file is called for your journal. Re-`knit` your document and note that the References section now looks appropriate for the journal. Note that we didn't have to change the `.bib` file at all: that is citation-style-agnostic. What the `.csl` file does is to say how to pull things out of the `.bib` file and format them in the appropriate way (so you don't have to). Thus, a `.bib` file is a good place to keep all your references, or you can have a separate `.bib` file for each paper, so that your thesis will use several `.bib` files. There is a way of using several `.bib` files in an R Markdown document.
 
 
 # Numbering and cross-referencing figures and tables
@@ -393,7 +394,7 @@ Change it to
 output: bookdown::html_document2
 ```
 
-The notation with the two colons means "the `html_document2` that lives in `bookdown`, and avoids your having to say `library(bookdown)` anywhere. This is the   `bookdown`   version of HTML output that allows cross-references.
+The notation with the two colons means "the `html_document2` that lives in `bookdown`, and avoids your having to say `library(bookdown)` anywhere. This is the   `bookdown`   version of HTML output that allows cross-references.  Notice that "Knit HTML" next to the ball of wool has changed to just "Knit", but clicking on it will still process the document properly.
 
 # References
 
