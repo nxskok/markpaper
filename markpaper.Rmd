@@ -394,7 +394,7 @@ Change it to
 output: bookdown::html_document2
 ```
 
-The notation with the two colons means "the `html_document2` that lives in `bookdown`, and avoids your having to say `library(bookdown)` anywhere. This is the   `bookdown`   version of HTML output that allows cross-references.  Notice that "Knit HTML" next to the ball of wool has changed to just "Knit", but clicking on it will still process the document properly.
+The notation with the two colons means "the `html_document2` that lives in `bookdown`", and avoids your having to say `library(bookdown)` anywhere. This is the   `bookdown`   version of HTML output that allows cross-references.  Notice that "Knit HTML" next to the ball of wool has changed to just "Knit", but clicking on it will still process the document properly.
 
 # References
 
